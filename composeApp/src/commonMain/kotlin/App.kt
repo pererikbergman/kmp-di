@@ -14,22 +14,33 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import dependencyinjection.composeapp.generated.resources.Res
 import dependencyinjection.composeapp.generated.resources.compose_multiplatform
+import di.appModule
+import di.platformModule
+import org.koin.compose.KoinApplication
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
+    KoinApplication(application = {
+        modules(appModule, platformModule)
+    }
+    ) {
+        MaterialTheme {
+            val greeter = koinInject<Greeter>()
+
+            var showContent by remember { mutableStateOf(false) }
+            Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                Button(onClick = { showContent = !showContent }) {
+                    Text("Click me!")
+                }
+                AnimatedVisibility(showContent) {
+                    val greeting = remember { greeter.greet() }
+                    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                        Image(painterResource(Res.drawable.compose_multiplatform), null)
+                        Text("Compose: $greeting")
+                    }
                 }
             }
         }

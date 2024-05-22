@@ -1,7 +1,18 @@
-class Greeting {
-    private val platform = getPlatform()
-
-    fun greet(): String {
+class Greeting(
+    private val platform: Platform
+) : Greeter {
+    override fun greet(): String {
         return "Hello, ${platform.name}!"
     }
+}
+
+interface Greeter {
+    fun greet(): String
+}
+
+
+class MyViewModel(
+    private val repository: MyRepository
+) {
+        ...
 }
