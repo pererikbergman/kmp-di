@@ -9,10 +9,3 @@ class Greeting(
 interface Greeter {
     fun greet(): String
 }
-
-
-class MyViewModel(
-    private val repository: MyRepository
-) {
-        ...
-}
